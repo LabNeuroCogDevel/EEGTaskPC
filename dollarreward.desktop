@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=DollarReward
+GenericName=DollarReward
+Comment=Anti Saccade with Reward and Neutral Trials
+Exec=bash -c "source ~/.venv/bin/activate; cd ~/tasks/lncdtask/; ./lncdtask/dollarreward.py --where eeg dollar_reward_events.txt"
+Type=Application
+#Icon=/home/lncd/tasks/MMY4/img/nBMSI.png
+Terminal=true

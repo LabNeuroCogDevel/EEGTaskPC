@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=RestOpenClose
+GenericName=RestOpenClose
+Comment=Resting state 1min blocks with eyes open or closed.
+Exec=bash -c "source ~/.venv/bin/activate; cd ~/tasks/RestEEG/; ./LNCD_Rest_AM.py"
+Type=Application
+Icon=application-x-desktop
+Terminal=true

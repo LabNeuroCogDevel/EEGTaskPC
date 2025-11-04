@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=EyeCalibration
+GenericName=EyeCalibration
+Comment=EEG Eye callibration with horz dots
+Exec=bash -c "source ~/.venv/bin/activate; cd ~/tasks/mgs_encode_memory.py/; ./eeg_eyecal.py"
+Type=Application
+Icon=application-x-desktop
+Terminal=true

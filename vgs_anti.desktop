@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=EEG VGS Anti
+GenericName=VGSAnti
+Comment=Visually guided and Anti Saccade tasks
+Exec=bash -c "source ~/.venv/bin/activate; cd ~/tasks/mgs_encode_memory.py/; ./vgs_anti.py"
+Type=Application
+Icon=application-x-desktop
+Terminal=true

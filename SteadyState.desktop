@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=SteadyState
+GenericName=SteadyState
+Comment=20 30 and 40 Hz click trains for 3mins/150 trials
+Exec=bash -c "source ~/.venv/bin/activate; cd ~/tasks/SteadyState.py/; ./steadystate.py"
+Type=Application
+Icon=application-x-desktop
+Terminal=true
