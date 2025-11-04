@@ -1,0 +1,6 @@
+MMY4/.git/config:	url = git@github.com:LabNeuroCogDevel/MMY4
+RestEEG/.git/config:	url = git@github.com:LabNeuroCogDevel/RestEEG
+SteadyState.py/.git/config:	url = git@github.com:LabNeuroCogDevel/SteadyState.py.git
+choice-landscape/.git/config:	url = git@github.com:LabNeuroCogDevel/choice-landscape.git
+lncdtask/.git/config:	url = https://github.com/LabNeuroCogDevel/lncdtask.git
+mgs_encode_memory.py/.git/config:	url = git@github.com:LabNeuroCogDevel/mgs_encode_memory.py

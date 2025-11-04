@@ -12,3 +12,6 @@ $(HOME)/Desktop/%.desktop: %.desktop
 /etc/modprobe.d/blacklist-lp_ftdi.conf: blacklist-lp_ftdi.conf
 	cp $< $@
 
+repos.txt:
+	grep github */.git/config > $@
+
