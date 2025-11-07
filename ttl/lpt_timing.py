@@ -134,12 +134,19 @@ if  __name__ == "__main__":
         import subprocess
         args.files = subprocess.run("""find \
                         /Volumes/Hera/Raw/EEG/ -maxdepth 2 -mindepth 2 -mtime -1  -type d -print0 |
-                       xargs -0I{} find {} -iname '*bdf' -print0""",
+                       xargs -0I{} find {} -mtime -1 -iname '*bdf' -print0""",
                                     capture_output=True,shell=True).stdout.decode()[:-1].split('\0')
+
+    # no new files -- only empty line? exit normally
+    if len(args.files) < 0 or (len(args.files)==1 and not args.files[0]):
+        sys.exit(0)
 
     # 12184_20251105_anti2.bdf        VGSAnti:trial   n=41    0.0020  1.500-1.498 (1.500s)    [ttl  10 to 254]
     print("file\tconf\tn\tmaxdiff\trange(mean)\tbtwn ttl")
     for bdf in args.files:
+        # empty string? should be caught above too
+        if not bdf:
+            continue
         try:
             config = name_disbatch(bdf)
         except Exception as e:
