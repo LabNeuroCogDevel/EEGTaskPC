@@ -154,12 +154,17 @@ if  __name__ == "__main__":
         try:
             config = name_disbatch(os.path.basename(bdf))
         except Exception as e:
-            print(e)
+            print(e, file=sys.stderr)
             continue
 
         if args.verbose:
             print(f"# {bdf}")
-        events, info = read_events(bdf)
+        try:
+            events, info = read_events(bdf)
+        except Exception as e:
+            fsize = os.stat(bdf).st_size/1024
+            print(f"ERROR reading events of {bdf} ({fsize} Kb): {e}", file=sys.stderr)
+            continue
         #print(info)
         if args.verbose:
             print(np.array(np.unique(events[:,2], return_counts=True)))
