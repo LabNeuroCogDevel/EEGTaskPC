@@ -15,21 +15,54 @@ class TTLConfig():
 
 class Habit(TTLConfig):
     """Habit has a ton of information.
-    We only care about 3 phases for timing/trial check."""
+    We only care about 3 phases for timing/trial check.
+
+     ttl                        | count 
+      1                         | 862
+      2     3     4             | 62    46   121
+     10                         | 1   
+     13    14    15             | 72    71    72   
+     23    24    25             | 72    72    72
+     73                         | 1
+    163   164   166   167   168 | 43    45    17    55    55  
+    213   214   216   217   218 | 13    15     3     5     4  
+    223   224   226   227   228 | 30    30  14    50    51
+    230                         | 1
+    65550 65664                 | 1     1
+
+    """
     @staticmethod
     def ttl_convert(ttl):
+        """
+        see https://github.com/LabNeuroCogDevel/choice-landscape/blob/9fd12e865a0660bbe5b7ae9f0cf2b2da06f31e4c/src/landscape/model/phase.cljs#L96
+        """
         if ttl == 1: # photo diode
             return 1
         elif ttl < 10: # button push 2,3,4
             return 2
-        elif ttl == 10:
-            return 10
-        elif ttl < 100: # 10 20
-            return (ttl // 10)  * 10
-        elif ttl > 100:
-            return (ttl // 100)  * 100
 
-    betweens = [{'a': 10, 'b': 100, 'label': 'rt'},
+        elif ttl < 20: # 10,13-15
+            return 10  # presented
+
+       # expect delay between button (recoded as 2) and screenchange (recoded as 20)
+        elif ttl < 70: # 20-25
+            return 20  # choice made.
+
+        elif ttl < 100:
+            return 70  # timeout
+
+        elif ttl < 200:# 163-168
+            return 100 # waiting (isi)
+
+        elif ttl < 230: # 213-228
+            return 200  # feedback
+        else: # 230 is survey
+            return ttl
+            #return (ttl // 100)  * 100
+
+    betweens = [{'a': 10, 'b': 2, 'label': 'rt'},
+                #{'a': 20, 'b': 100, 'label': 'move'},
+                {'a': 100, 'b': 200, 'label': 'isi'},
                 {'a': 2,  'b': 1, 'label': 'bnt2pd'} ]
 
 class VGSAnti(TTLConfig):
