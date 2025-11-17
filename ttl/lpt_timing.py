@@ -34,7 +34,11 @@ def read_events(bdf):
 
     # events = mne.find_events(eeg, shortest_event=2)
     add_stim_corrected(eeg)
-    events = mne.find_events(eeg, stim_channel="StatusCorrected", shortest_event=2, verbose=False)
+    if re.search('habit', bdf, flags=re.IGNORECASE):
+        shortest_event = 1
+    else:
+        shortest_event = 2
+    events = mne.find_events(eeg, stim_channel="StatusCorrected", shortest_event=shortest_event, verbose=False)
     return (events, eeg.info)
 
 def correct_ttl(x):
@@ -87,13 +91,13 @@ def between(events, a, b, verb=False):
     return np.array(diff)
 
 def name_disbatch(fname):
-    pat_set = {'habit':   {'patt': r'habit',           'conf': ttlconfig.Habit},
-               'switch': {'patt': r'switch',          'conf': ttlconfig.Switch},
-               'rest':   {'patt': r'rest',            'conf': ttlconfig.Rest},
-               'cal':    {'patt': r'eyecal',          'conf': ttlconfig.EyeCal},
-               'dr':     {'patt': r'dr|dollarreward', 'conf': ttlconfig.DollarReward},
-               'anti':   {'patt': r'_anti',           'conf': ttlconfig.VGSAnti},
-               'vgs':    {'patt': r'_vgs',           'conf': ttlconfig.VGSAnti},
+    pat_set = {'habit':   {'patt': r'habit',    'conf': ttlconfig.Habit},
+               'switch': {'patt': r'switch',    'conf': ttlconfig.Switch},
+               'rest':   {'patt': r'rest',      'conf': ttlconfig.Rest},
+               'cal':    {'patt': r'eyecal',    'conf': ttlconfig.EyeCal},
+               'dr':     {'patt': r'dr|dollar','conf': ttlconfig.DollarReward},
+               'anti':   {'patt': r'_anti',     'conf': ttlconfig.VGSAnti},
+               'vgs':    {'patt': r'_vgs',      'conf': ttlconfig.VGSAnti},
                'ss':     {'patt': r'(steadystate|ss)([234])0', 'conf': ttlconfig.SteadyState},
                }
     for task, d in pat_set.items():
@@ -107,7 +111,7 @@ def name_disbatch(fname):
         if os.environ.get("DEBUG"):
             print(f"no match for pattern {d['patt']} against file {fname}")
 
-    raise Exception(f"Error: {fname} doesn't match known task")
+    raise Exception(f"Error: {fname} doesn't match known tasks ({','.join([x['patt'] for _,x in pat_set.items()])}). Set DEBUG=1 for more.")
 
 
 if  __name__ == "__main__":
@@ -148,7 +152,7 @@ if  __name__ == "__main__":
         if not bdf:
             continue
         try:
-            config = name_disbatch(bdf)
+            config = name_disbatch(os.path.basename(bdf))
         except Exception as e:
             print(e)
             continue
@@ -176,7 +180,7 @@ if  __name__ == "__main__":
                 print(f"between adjusted {a} and {b}: {','.join(['%.4f'%x for x in time_between_pulse])}")
             n = len(time_between_pulse)
             if n == 0:
-                print(f"ERROR: No value for {a} {b if b else ''} in {bdf}")
+                print(f"ERROR: No value for {a} {b if b else ''} in {bdf}", file=sys.stderr)
                 continue
             goodtimes = config.discard(time_between_pulse, config.maxdiff)
             mean = np.mean(goodtimes)

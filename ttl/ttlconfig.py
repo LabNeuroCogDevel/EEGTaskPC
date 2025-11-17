@@ -18,14 +18,19 @@ class Habit(TTLConfig):
     We only care about 3 phases for timing/trial check."""
     @staticmethod
     def ttl_convert(ttl):
-        if ttl < 10:
-            return ttl
-        elif ttl < 100:
+        if ttl == 1: # photo diode
+            return 1
+        elif ttl < 10: # button push 2,3,4
+            return 2
+        elif ttl == 10:
+            return 10
+        elif ttl < 100: # 10 20
             return (ttl // 10)  * 10
         elif ttl > 100:
             return (ttl // 100)  * 100
 
-    betweens = [{'a': 10, 'b': 100, 'label': 'rt'}]
+    betweens = [{'a': 10, 'b': 100, 'label': 'rt'},
+                {'a': 2,  'b': 1, 'label': 'bnt2pd'} ]
 
 class VGSAnti(TTLConfig):
     """VGS enclose position but we can discared that for the sake of timing
@@ -88,8 +93,26 @@ class Switch(TTLConfig):
 
 class DollarReward(TTLConfig):
     """
+Trigger values look like
+[[   50   130   131   132   133   134   135   136   141   142   143   144
+    145   146   230   231   232   233   234   235   236   241   242   243
+    244   245   246 65586 65664]
+ [  142     3     3     2     2     2     3     3     3     2     2     2
+      3     3     3     3     2     2     2     1     3     3     2     2
+      2     1     3     1     1]]
     """
-    betweens = [{'a': 200, 'b': 201, 'label': 'dollarreward'}]
+    def ttl_convert(ttl):
+        if ttl == 50:
+            return 50       # 50 = iti
+        elif ttl < 200:
+            return 100      # 100 = cue? side+rew/neu
+        if ttl > 200 and ttl < 255:
+            return 200      # 200 = dot? side+rew/neu
+        return ttl          # junk?
+
+    betweens = [{'a': 50,  'b': 100, 'label': 'iti2cue'},
+                #{'a': 100, 'b': 200, 'label': 'cue2dot'},
+                {'a': 200, 'b': 50,  'label': 'dot2iti'}]
 
 class SteadyState(TTLConfig):
     """
